@@ -4,8 +4,8 @@ with
     green_data as (
         select
             tripid,
-            vendor_id,
-            ratecode_id,
+            vendor,
+            ratecode,
             pickup_location_id,
             dropoff_location_id,
             pickup_datetime,
@@ -13,7 +13,7 @@ with
             store_and_fwd_flag,
             passenger_count,
             trip_distance,
-            trip_type,
+            trip_type_desc,
             fare_amount,
             extra,
             mta_tax,
@@ -22,7 +22,6 @@ with
             ehail_fee,
             improvement_surcharge,
             total_amount,
-            payment_type,
             payment_type_description,
             congestion_surcharge,
             "Green" as service_type
@@ -31,8 +30,8 @@ with
     yellow_data as (
         select
             tripid,
-            vendor_id,
-            ratecode_id,
+            vendor,
+            ratecode,
             pickup_location_id,
             dropoff_location_id,
             pickup_datetime,
@@ -40,7 +39,7 @@ with
             store_and_fwd_flag,
             passenger_count,
             trip_distance,
-            Null as trip_type,
+            "Not Provided" as trip_type_desc,
             fare_amount,
             extra,
             mta_tax,
@@ -49,7 +48,6 @@ with
             Null as ehail_fee,
             improvement_surcharge,
             total_amount,
-            payment_type,
             payment_type_description,
             congestion_surcharge,
             "Yellow" as service_type
@@ -65,9 +63,9 @@ with
     dim_zones as (select * from{{ ref("zones_ny") }} where borough != 'Unknown')
 select
     trips_unioned.tripid,
-    trips_unioned.vendor_id,
+    trips_unioned.vendor,
     trips_unioned.service_type,
-    trips_unioned.ratecode_id,
+    trips_unioned.ratecode,
     trips_unioned.pickup_location_id,
     pickup_zone.borough as pickup_borough,
     pickup_zone.zone as pickup_zone,
@@ -79,7 +77,7 @@ select
     trips_unioned.store_and_fwd_flag,
     trips_unioned.passenger_count,
     trips_unioned.trip_distance,
-    trips_unioned.trip_type,
+    trips_unioned.trip_type_desc,
     trips_unioned.fare_amount,
     trips_unioned.extra,
     trips_unioned.mta_tax,
@@ -88,7 +86,6 @@ select
     trips_unioned.ehail_fee,
     trips_unioned.improvement_surcharge,
     trips_unioned.total_amount,
-    trips_unioned.payment_type,
     trips_unioned.payment_type_description,
     trips_unioned.congestion_surcharge
 from trips_unioned

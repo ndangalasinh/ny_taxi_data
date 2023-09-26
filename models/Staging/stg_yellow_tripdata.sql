@@ -4,7 +4,9 @@ select
     -- identifiers
     {{ dbt_utils.surrogate_key(["vendorid", "pickup_datetime"]) }} as tripid,
     cast(vendorid as integer) as vendor_id,
+    {{get_vendorid_description("vendorid")}} as vendor,
     cast(ratecodeid as integer) as ratecode_id,
+    {{get_ratecodeid_description("ratecodeid")}} as ratecode,
     cast(pickup_location_id as integer) as pickup_location_id,
     cast(dropoff_location_id as integer) as dropoff_location_id,
 
