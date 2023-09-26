@@ -2,10 +2,58 @@
 
 with
     green_data as (
-        select *, "Green" as service_type from {{ ref("stg_green_tripdata") }}
-    )
+        select
+            tripid,
+            vendor_id,
+            ratecode_id,
+            pickup_location_id,
+            dropoff_location_id,
+            pickup_datetime,
+            dropoff_datetime,
+            store_and_fwd_flag,
+            passenger_count,
+            trip_distance,
+            trip_type,
+            fare_amount,
+            extra,
+            mta_tax,
+            tip_amount,
+            tolls_amount,
+            ehail_fee,
+            improvement_surcharge,
+            total_amount,
+            payment_type,
+            payment_type_description,
+            congestion_surcharge,
+            "Green" as service_type
+        from {{ ref("stg_green_tripdata") }}
+    ),
     yellow_data as (
-        select *, "Yellow" as service_type from {{ref("stg_yellow_tripdata")}}
+        select
+            tripid,
+            vendor_id,
+            ratecode_id,
+            pickup_location_id,
+            dropoff_location_id,
+            pickup_datetime,
+            dropoff_datetime,
+            store_and_fwd_flag,
+            passenger_count,
+            trip_distance,
+            Null as trip_type,
+            fare_amount,
+            extra,
+            mta_tax,
+            tip_amount,
+            tolls_amount,
+            Null as ehail_fee,
+            improvement_surcharge,
+            total_amount,
+            payment_type,
+            payment_type_description,
+            congestion_surcharge,
+            "Yellow" as service_type
+        from {{ ref("stg_yellow_tripdata") }}
     ),
     trips_unioned as (
         select *
@@ -45,9 +93,8 @@ select
     trips_unioned.congestion_surcharge
 from trips_unioned
 inner join
- dim_zones as pickup_zone on trips_unioned.pickup_location_id = pickup_zone.location_id
+    dim_zones as pickup_zone
+    on trips_unioned.pickup_location_id = pickup_zone.location_id
 inner join
     dim_zones as dropoff_zone
     on trips_unioned.dropoff_location_id = dropoff_zone.location_id
-
-

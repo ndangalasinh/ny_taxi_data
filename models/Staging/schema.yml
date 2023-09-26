@@ -19,14 +19,12 @@ models:
               severity: warn
           - not_null:
               severity: warn
-      - name: vendorid
+      - name: vendor_id
         description: Code indicating the provider of the record
         tests:
-          - unique:
-              severity: warn
           - not_null:
               severity: warn
-      - name: pickup_locationid
+      - name: pickup_location_id
         description: Location where the passenger was picked up from
         tests:
           - relationships:

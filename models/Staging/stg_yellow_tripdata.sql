@@ -2,15 +2,15 @@
 
 select
     -- identifiers
-    {{ dbt_utils.surrogate_key(["vendorid", "tpep_pickup_datetime"]) }} as tripid,
+    {{ dbt_utils.surrogate_key(["vendorid", "pickup_datetime"]) }} as tripid,
     cast(vendorid as integer) as vendor_id,
     cast(ratecodeid as integer) as ratecode_id,
-    cast(pulocationid as integer) as pickup_location_id,
-    cast(dolocationid as integer) as dropoff_location_id,
+    cast(pickup_location_id as integer) as pickup_location_id,
+    cast(dropoff_location_id as integer) as dropoff_location_id,
 
     -- timestamps
-    cast(tpep_pickup_datetime as timestamp) as pickup_datetime,
-    cast(tpep_dropoff_datetime as timestamp) as dropoff_datetime,
+    cast(pickup_datetime as timestamp) as pickup_datetime,
+    cast(dropoff_datetime as timestamp) as dropoff_datetime,
 
     -- trip info
     store_and_fwd_flag,
