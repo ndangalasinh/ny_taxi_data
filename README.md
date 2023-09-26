@@ -4,7 +4,7 @@ Data to be used by the analyts is modelled here so that we can stay organized.
 
 ### Models included are as following
 1. Core 
-    - zones Table
+    - zones_ny Table
     - facts_trip Table
     - monthly_zone_revenue Table
     - monthly_zone_riders Table
