@@ -1,0 +1,43 @@
+version: 2
+
+sources:
+  - name: staging
+    database: first-provider-397409
+    schema: dezoomcamp
+    tables:
+      - name: yellow_rides
+      - name: green_rides
+      - name: fhv_data
+models:
+  - name: stg_green_tripdata
+    description: trips made by the green taxi
+    columns:
+      - name: tripid
+        description: Primary key of this view
+        tests:
+          - unique:
+              severity: warn
+          - not_null:
+              severity: warn
+      - name: vendor_id
+        description: Code indicating the provider of the record
+        tests:
+          - not_null:
+              severity: warn
+      - name: pickup_location_id
+        description: Location where the passenger was picked up from
+        tests:
+          - relationships:
+              field: locationid
+              to: ref('taxi_zone_lookup')
+              severity: warn
+      - name: payment_type
+        description: Codes representing what type of payment
+        tests:
+          - accepted_values:
+              values:
+                - "{{var('payment_type_values')}}"
+              severity: warn
+              quote: false
+              
+      
