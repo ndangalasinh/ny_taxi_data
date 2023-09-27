@@ -1,6 +1,7 @@
 # NYC Taxi & Limousine Commission
 This is end to end Data Engineering project, data is being fetched from the NYC Taxi & Limousine Commision's website https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page then data is processed and stored into  Google's fully managed, serverless data warehouse. This data is then modelled using DBT to create several tables that then will be used by analysts to create dashboards and analysis.
 
+
 I would like to thank DTC and all the instructors for providing access to all the materials from their amazing DE zoomcamp, I have borrowed most of the ideas from their examples and did minor changes to fit with my interest (You can fin more details about this amazing club and a lot of other free resources they provide here https://datatalks.club/).
 
 I imagined to be a Data Engineer for an organization with interest in the ridership of this service and I have been tasked with setting  up a data workflow which will allow analysts and scientists to have access to clean and reliable datasets.
