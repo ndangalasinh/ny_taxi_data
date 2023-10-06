@@ -1,3 +1,44 @@
+# Data Engineering End to End Project: Analysis of NYC Taxi & Limousine Commission data
+
+## Tech Stack
+- Prefect
+    - Workflow orchestration tool for data https://www.prefect.io/
+- Google BigQuery
+    - Google's fully managed, serverless data warehouse that enables scalable analysis over petabytes of data. 
+- DBT
+    - An open-source command line tool that helps analysts and engineers transform data in their warehouse more effectively.
+- Google Data Studio
+    - A web-based data visualization tool that helps users build customized dashboards and easy-to-understand reports.
+## Overview
+This is end to end Data Engineering project where data is fetched batch processed and then made readily available for analysis. This data is being fetched from the NYC Taxi & Limousine Commision's website https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page, get processed, and then stored into  Google's fully managed serverless data warehouse. This data is then modelled using DBT to create several tables that then will be used by analysts to create dashboards and analysis.
+
+
+Similar project was demonstrated in the Data Engineering Zoomcamp run by Data Talks Club(DTC), while I have altered some of the implementation I have borrowed most of their ideas. I highly recommend for this boot camp for novice Data Engineers, they can be found here https://datatalks.club/.
+## Project's main components
+Implementation of this project can be done in three main parts. First, data is aquired from the source and it is processed to obtain consistency needed and attend some of the issues inherited from the source. Second step is to store data into ware house. Third step is to model this stored data into the format that best fit our usecase and the last step is to now use the modeled data to do the visualization and analysis of the data.
+### Data Aquisation and Processing
+As explained above this data is being fetched from the NYC Taxi & Limousine Commission website, since this data is is available as in parquet format then we can directly fetch it into a pandas dataframe. The way data is fetched is different depending if we have the previous data already or not as discussed bellow.
+#### First time (initial) Aquisation
+In the case that this is the first time we are loading this data then we will have to load all the previous datasets. Care has to be given to attend the fact that you might not want to load all the data set if you do not have enough storage.
+#### Routine Aquisation 
+In this case data is loaded on a regular cadance ie once a month so we only load the data that was not loaded last time we loaded data. The simple way to do so is by looking at the current date and then obtain the valu to represent the previous month and use that to select needed data set.
+
+The last thing to be done in this stage is to process data before we store it. While there are several things that can be cleaned and removed, in this implementation minimum transformations approach was selected. To chose between maximum transformation of data to minimum transformation of data one has to consider several factors such as storage capability and what are the likely hood that you might need such data in the future.
+
+In this case in particular only few columns were renamed to ease the data processing down stream.
+
+### Data storage 
+The modified data now is ready to be stored in our storage, we will store this data into two different tables. Data from the green taxi will be stored in green rides table and that from the yellow taxi will be stored in yellow rides table in the Google's BigQuery.
+
+Attention should be paid to making sure that the speed at which data is being injected will not overwelm the storage.
+### Ochestration and Scheduling
+
+### Data Modelling 
+### Data visualization 
+## How to implement this project
+#TODO
+    1. Add the initial load workflow
+
 # NYC Taxi & Limousine Commission
 This is end to end Data Engineering project, data is being fetched from the NYC Taxi & Limousine Commision's website https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page then data is processed and stored into  Google's fully managed, serverless data warehouse. This data is then modelled using DBT to create several tables that then will be used by analysts to create dashboards and analysis.
 
