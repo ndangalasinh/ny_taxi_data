@@ -32,6 +32,11 @@ The modified data now is ready to be stored in our storage, we will store this d
 
 Attention should be paid to making sure that the speed at which data is being injected will not overwelm the storage.
 ### Ochestration and Scheduling
+In a real case scenario data fetching, downlodading, processing and storing need to be automated and monitored for failures or other erros.
+
+There are multiple options of what tools you can use to orchestrate and monitor your scheduled data pipelines, in this case Prefect from https://www.prefect.io/ was used.
+
+After the pipeline was set, a deployment with desired scheduling and monitoring was set configured and deployed. 
 
 ### Data Modelling 
 ### Data visualization 
