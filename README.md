@@ -15,71 +15,34 @@ This is end to end Data Engineering project where data is fetched batch processe
 
 Similar project was demonstrated in the Data Engineering Zoomcamp run by Data Talks Club(DTC), while I have altered some of the implementation I have borrowed most of their ideas. I highly recommend for this boot camp for novice Data Engineers, they can be found here https://datatalks.club/.
 ## Project's main components
-Implementation of this project can be done in three main parts. First, data is aquired from the source and it is processed to obtain consistency needed and attend some of the issues inherited from the source. Second step is to store data into ware house. Third step is to model this stored data into the format that best fit our usecase and the last step is to now use the modeled data to do the visualization and analysis of the data.
-### Data Aquisation and Processing
-As explained above this data is being fetched from the NYC Taxi & Limousine Commission website, since this data is is available as in parquet format then we can directly fetch it into a pandas dataframe. The way data is fetched is different depending if we have the previous data already or not as discussed bellow.
-#### First time (initial) Aquisation
-In the case that this is the first time we are loading this data then we will have to load all the previous datasets. Care has to be given to attend the fact that you might not want to load all the data set if you do not have enough storage.
-#### Routine Aquisation 
-In this case data is loaded on a regular cadance ie once a month so we only load the data that was not loaded last time we loaded data. The simple way to do so is by looking at the current date and then obtain the valu to represent the previous month and use that to select needed data set.
+Implementation of this project can be done in three main parts. First Data Aquisation, processing and Storage which covers the whole process of fetching and transforming the fetched data before being stored this whole process is automated by Orchestration and Scheduling tool Prefect. Second stage of this project is modelling the stored data into tables that caters to the needs of the analysts, DBT is the tool we are using in this project for data modelling. The last stage is to create visualization and reporting from the modelled data, here we have used Google's data studio as the reporting tool.
 
-The last thing to be done in this stage is to process data before we store it. While there are several things that can be cleaned and removed, in this implementation minimum transformations approach was selected. To chose between maximum transformation of data to minimum transformation of data one has to consider several factors such as storage capability and what are the likely hood that you might need such data in the future.
-
-In this case in particular only few columns were renamed to ease the data processing down stream.
-
-### Data storage 
-The modified data now is ready to be stored in our storage, we will store this data into two different tables. Data from the green taxi will be stored in green rides table and that from the yellow taxi will be stored in yellow rides table in the Google's BigQuery.
-
-Attention should be paid to making sure that the speed at which data is being injected will not overwelm the storage.
-### Ochestration and Scheduling
-In a real case scenario data fetching, downlodading, processing and storing need to be automated and monitored for failures or other erros.
-
+### Data Aquisation, Processing, and Storage.(with Orchestration and Scheduling) 
+In this part data is downloaded from the source, processed and then stored in a storage, this process is autmoated by using Orchestratation tools.
 There are multiple options of what tools you can use to orchestrate and monitor your scheduled data pipelines, in this case Prefect from https://www.prefect.io/ was used.
 
-After the pipeline was set, a deployment with desired scheduling and monitoring was set configured and deployed. 
+After the pipeline was set, a deployment with desired scheduling and monitoring was set configured and deployed.
 
+#### Data Aquisation 
+As explained above this data is being fetched from the NYC Taxi & Limousine Commission website, since this data is is available as in parquet format then we can directly fetch it into a pandas dataframe. The way data is fetched is different depending if we have the previous data already or not as discussed bellow.
+##### First time (initial) Aquisation
+In the case that this is the first time we are loading this data then we will have to load all the previous datasets. Care has to be given to attend the fact that you might not want to load all the data set if you do not have enough storage.
+##### Routine Aquisation 
+In this case data is loaded on a regular cadance ie once a month so we only load the data that was not loaded last time we loaded data. The simple way to do so is by looking at the current date and then obtain the valu to represent the previous month and use that to select needed data set.
+
+#### Processing
+After datqa aquisation now we can do some processing before we store this data into the Google's Bigquery, it is very important not to do a lot of modification here because we going to store this data in its crude format and downstream will model few tables that we need to keep.
+In this case in particular only few columns were renamed and some rows that could cause issues downstream were removed.
+
+#### Data storage 
+The slightly modified data now is ready to be stored in BigQuery, we will store this data into two different tables. Data from the green taxi will be stored in green rides table and that from the yellow taxi will be stored in yellow rides table.
+
+ 
 ### Data Modelling 
-### Data visualization 
-## How to implement this project
-#TODO
-    1. Add the initial load workflow
-
-# NYC Taxi & Limousine Commission
-This is end to end Data Engineering project, data is being fetched from the NYC Taxi & Limousine Commision's website https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page then data is processed and stored into  Google's fully managed, serverless data warehouse. This data is then modelled using DBT to create several tables that then will be used by analysts to create dashboards and analysis.
-
-
-I would like to thank DTC and all the instructors for providing access to all the materials from their amazing DE zoomcamp, I have borrowed most of the ideas from their examples and did minor changes to fit with my interest (You can fin more details about this amazing club and a lot of other free resources they provide here https://datatalks.club/).
-
-I imagined to be a Data Engineer for an organization with interest in the ridership of this service and I have been tasked with setting  up a data workflow which will allow analysts and scientists to have access to clean and reliable datasets.
-
-To achieve the above goal I have divided this task into three sub tasks.
-- Data acquisation, processing and Ingesting
-- Data Modelling using DBT
-- Data visualization on Google Data Studio
-
-## Data Acquisation
-To be able to get this data set reliably a simple ETL has been established which fetches this data from the website in parquet format converts it to pandas dataframe and to some basic Transformations before injecting the dataframe into google's Big query.
-
-for this project I am using Google's Big query for simplicity, but I could any other storage services that are available such as Amazon S3.
-
-Due to the nature of the dataset and the request, the first time this ETL is being deployed we will be fetching all data from the source. However from the second time onward we should change the ETL to make sure that it only fetches data that does not exist in our data warehouse. (This can be done by a simple PR)
-
-In this step we are dumping all the data we can find into the bq, assumption is made that there might some data that we do not need now but they can be very useful later so since storage is not a bottleneck we are off better to collect it now.
-
-I am using Prefect (https://www.prefect.io/) to orchestrate this process, this tool enable me to manage well all the workflows in my ETL and batch it into deployment which can allow schedulling and notification to facilitate automation of the whole process.
-
-In a real life case; this ETL will be run by prefect in an virtual machine or server somewhere which will enable it to be automated by using deployment and scheduling feature.
-
-I chose prefect for this project but I could also use Dagster or Airflow to serve the same process 
-
-
-## Data Modeling using DBT
-Now after data aquisation we will end up with data into our storage, in simple case like this the analysts can easilty access the data from this storage and build dashbord or perfom analysis without a problem. But in cases where there is a lot of data from different sources Warehouse can easily end up being confusing and rander its advantages. Hence it is very important to get into a behavior of modelling this data into the easily consumed format.
+Now at this stage we will end up with data into our storage, in simple case like this the analysts can easilty access the data from this storage and build dashbord or perfom analysis without a problem. But in cases where there is a lot of data from different sources Warehouse can easily end up being confusing and rander its advantages. Hence it is very important to get into a behavior of modelling this data into the easily consumed format.
 
 While there are multiple tools you can use to model data, I have opted to use DBT for simplicity of this project.
-
-
-### Models included are as following
+#### Our models will be classified into two groups as follows
 1. Core 
     - zones_ny Table
     - facts_trip Table
@@ -88,9 +51,9 @@ While there are multiple tools you can use to model data, I have opted to use DB
 1. Staging
     - stg_greeen_tripdata View
     - stg_yellow_tripdata View
-### Seeding
-    - we are only seeding a look up file taxi_zone_lookup.cv for the ny zones
-### Testing
+#### Seeding(This is used to load files that do not change often)
+- we are only seeding a look up file taxi_zone_lookup.cv for the ny zones
+#### Testing in our models is implemented as follows
 Only the basic tests have been implemented via schema of the models as follows
 1. stg_green_tripdata 
     - columns to be tested 
@@ -109,9 +72,32 @@ Only the basic tests have been implemented via schema of the models as follows
                 1. accepted_values warn
 ### Macros
 We only have few macros that decode some of the basic information which was not given directly
+- get_payment_type_description.sql
+- get_ratecode_description.sql
+- get_triptype_description.sql
+- get_vendorid_description.sql
 
 ## Data visualization on Google Data Studio
 I have demonstrated data visualization of this modelled data using Google Data Studio for simplicity, you can acess that visualizaion here https://lookerstudio.google.com/reporting/990a2679-8d75-413b-9ec7-80d3c2595987
 
 Different tools can be used in this case such as PowerBI, Tableau, or Sisense
+
+## How to implement this project 
+### part 1
+1. Clone the repository
+1. Install the required requirements from the requirements.txt
+1. If you do not have a gcp account create one 
+1. Create GCP credentials in your prefect UI
+1. Now you can upload data to your storage
+### part 2
+1. create account with DBT cloud
+1. Create project with DBT
+1. Link the DBT project with repository
+1. Connect DBT with your storage
+
+### part 3 
+1. Automate data aquisation
+2. Automate data modelling
+### part 4
+1. Data visualization
 
