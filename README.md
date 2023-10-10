@@ -22,6 +22,8 @@ In this part data is downloaded from the source, processed and then stored in a 
 There are multiple options of what tools you can use to orchestrate and monitor your scheduled data pipelines, in this case Prefect from https://www.prefect.io/ was used.
 
 After the pipeline was set, a deployment with desired scheduling and monitoring was set configured and deployed.
+ALTENATIVE XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+CCCCXXXXX
 
 #### Data Aquisation 
 As explained above this data is being fetched from the NYC Taxi & Limousine Commission website, since this data is is available as in parquet format then we can directly fetch it into a pandas dataframe. The way data is fetched is different depending if we have the previous data already or not as discussed bellow.
@@ -85,19 +87,69 @@ Different tools can be used in this case such as PowerBI, Tableau, or Sisense
 ## How to implement this project 
 ### part 1
 1. Clone the repository
-1. Install the required requirements from the requirements.txt
-1. If you do not have a gcp account create one 
-1. Create GCP credentials in your prefect UI
+1. Create virtual env
+1. Install the required requirements from the requirements.txt into your virtual env
+1. If you do not have a gcp account create one
+    - https://www.geeksforgeeks.org/how-to-create-a-free-tier-account-on-gcp/
+    - Settup a service account and download the key credentials in your local machine in JSON format(https://docs.getdbt.com/quickstarts/bigquery?step=4)
+1. start the prefect agent default
+      prefect agent start default
+1. Start prefect server
+    prefect server start
+1. Create GCP credentials block in your prefect UI
+    1. Go to blocks
+    1. Click the + sign and search for GCP credentials
+    1. Click add Block to add this block
+    1. Give the block a name (its recommended to use "gcp-credentials" or if you use other name remember to change the same in the etl.py and otherXXXXXXXXX)
 1. Now you can upload data to your storage
+    - For the initial load run etl.py, later we will deploy a job that will be uploading data after everymonth
+
 ### part 2
+#### Create a repository
+1. Create a personal repository on Github pointing it to your local directory for this projet
+#### Start a project inside DBT
 1. create account with DBT cloud
-1. Create project with DBT
-1. Link the DBT project with repository
-1. Connect DBT with your storage
+1. Create a new project in dbt Cloud. From Account settings (using the gear menu in the top right corner), click + New Project.
+1. Enter a project name and click Continue.
+1. For the warehouse, click BigQuery then Next to set up your connection.
+1. Click Upload a Service Account JSON File in settings.
+1. Select the JSON file you downloaded in Generate BigQuery credentials and dbt Cloud will fill in all the necessary fields.
+1. Click Test Connection. This verifies that dbt Cloud can access your BigQuery account.
+1. Click Next if the test succeeded. If it failed, you might need to go back and regenerate your BigQuery credentials.
+1. Under "Setup a repository", select Managed.
+1. Type a name for your repo such as bbaggins-dbt-quickstart
+1. Click Create. It will take a few seconds for your repository to be created and imported.
+1. Once you see the "Successfully imported repository," click Continue.
+#TODO Check the behavior when you connect and existing dbt repo
+
 
 ### part 3 
 1. Automate data aquisation
-2. Automate data modelling
+1. Automate data modelling
+#### Create a Deployment
+1. In the upper left, select Deploy, then click Environments.
+1. Click Create Environment.
+1. In the Name field, write the name of your deployment environment. For example, "Production."
+1. In the dbt Version field, select the latest version from the dropdown.
+1. Under Deployment Credentials, enter the name of the dataset you want to use as the target, such as "Analytics". This will allow dbt to build and work with that dataset. For some data warehouses, the target dataset may be referred to as a "schema".
+1. Click Save.
+
+#### Scheduling a deployment
+1. After creating your deployment environment, you should be directed to the page for a new environment. If not, select Deploy in the upper left, then click Jobs.
+1. Click Create one and provide a name, for example, "Production run", and link to the Environment you just created.
+1. Scroll down to the Execution Settings section.
+1. Under Commands, add this command as part of your job if you don't see it:
+    - dbt build
+1. Select the Generate docs on run checkbox to automatically generate updated project docs each time your job runs.
+1. For this exercise, do not set a schedule for your project to run — while your organization's project should run regularly, there's no need to run this example project on a schedule. Scheduling a job is sometimes referred to as deploying a project.
+1. Select Save, then click Run now to run your job.
+1. Click the run and watch its progress under "Run history."
+1. Once the run is complete, click View Documentation to see the docs for your project.
+
+
 ### part 4
 1. Data visualization
+
+
+
 

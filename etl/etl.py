@@ -2,7 +2,6 @@ import pandas as pd
 from datetime import datetime
 
 from prefect import flow, task
-from prefect_gcp.cloud_storage import GcsBucket
 from prefect_gcp import GcpCredentials
 
 
