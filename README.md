@@ -41,10 +41,12 @@ The slightly modified data now is ready to be stored in BigQuery, we will store 
 
  
 ### Data Modelling 
-Now at this stage we will end up with data into our storage, in simple case like this the analysts can easilty access the data from this storage and build dashbord or perfom analysis without a problem. But in cases where there is a lot of data from different sources Warehouse can easily end up being confusing and rander its advantages. Hence it is very important to get into a behavior of modelling this data into the easily consumed format.
+Now that we have data in our storage we will have to prepare it to be able to be used, in simple case the analysts can easilty access the data from this storage and build dashbord or perfom analysis without a problem. But in cases where there is a lot of data from different sources a warehouse can easily end up being confusing and not having advantages we anticipate a warehouse to have. Hence it is very important to get into a behavior of modelling this data into the easily consumed form ie by combining some tables.
 
-While there are multiple tools you can use to model data, I have opted to use DBT for simplicity of this project.
-#### Our models will be classified into two groups as follows
+We are using DBT as a tool to model data, DBT is very familiar among data engineers in data modelling.
+#### Data will be modelled as follows
+For context DBT uses the tables that we generated when we stored data in the data warehouse to generate either tables or views which can be used to generate final tables that our analysts will use.
+In this case we have some views that are derived from the tables and then we are using those fews to create tables in Core which are made available to the analysts
 1. Core 
     - zones_ny Table
     - facts_trip Table
@@ -54,6 +56,7 @@ While there are multiple tools you can use to model data, I have opted to use DB
     - stg_greeen_tripdata View
     - stg_yellow_tripdata View
 #### Seeding(This is used to load files that do not change often)
+Seeding is used to upload data into the warehouse, the difference is this is data that might not be changing often so we only do this once.
 - we are only seeding a look up file taxi_zone_lookup.cv for the ny zones
 #### Testing in our models is implemented as follows
 Only the basic tests have been implemented via schema of the models as follows
@@ -72,30 +75,80 @@ Only the basic tests have been implemented via schema of the models as follows
         - payment_type
             - Tests:
                 1. accepted_values warn
-### Macros
+TODO add more testing
+#### Macros
 We only have few macros that decode some of the basic information which was not given directly
 - get_payment_type_description.sql
 - get_ratecode_description.sql
 - get_triptype_description.sql
 - get_vendorid_description.sql
 
-## Data visualization on Google Data Studio
+### Data visualization on Google Data Studio
 I have demonstrated data visualization of this modelled data using Google Data Studio for simplicity, you can acess that visualizaion here https://lookerstudio.google.com/reporting/990a2679-8d75-413b-9ec7-80d3c2595987
 
 Different tools can be used in this case such as PowerBI, Tableau, or Sisense
 
 ## How to implement this project 
 ### part 1
-1. Clone the repository
+1. Clone the repository 
+```
+git clone https://github.com/ndangalasinh/ny_taxi_data.git
+
+```
 1. Create virtual env
+It is a good practice to create a virtual environment where we will implement this project, there are a number of options to do this. I am using conda, you should feel free to use the method you are confident with.
+
+    - If you do not have conda yet you should install it
+    ```
+    pip install conda
+    ```
+    - Then you can create you own virtual en
+    ```
+    conda create --name myenv python=3.9
+    ```
+1. Activate the virtual environment you have just created
+    ```
+    conda activate myenv
+    ```
+1. Navigate into the cloned directory
 1. Install the required requirements from the requirements.txt into your virtual env
+    ```
+    pip install -r requirements.txt
+    ```
 1. If you do not have a gcp account create one
-    - https://www.geeksforgeeks.org/how-to-create-a-free-tier-account-on-gcp/
-    - Settup a service account and download the key credentials in your local machine in JSON format(https://docs.getdbt.com/quickstarts/bigquery?step=4)
-1. start the prefect agent default
+    1. What you need
+        - A valid Gmail ID
+        - Credit card and a phone number (While you can use the free tier but payment method is needed to set up)
+    1. Navigate to the GCP home page(https://cloud.google.com/free).
+    1. Click on the Start free button
+    1. Sign in with your Gmail ID.
+    1. Select your country from the drop-down, accept the terms of service, and then click on continue
+    1. Enter the Business name and Enter payment method.
+    1. Start my Free Trial.
+    1. Complete the payment and your free trial will start (Small amount of money will be deducted and then it will be refunded later)
+
+1. Settup a service account and download the key credentials in your local machine in JSON format
+    1. Go to https://console.cloud.google.com/apis/credentials/wizard
+    1. Make sure your project is selected on the header of the page
+    1. From the Select an API dropdown, choose BigQuery API
+    1. Select Application data for the type of data you will be accessing
+    1. Select No, I’m not using them and click Next.
+    1. Click Next to create a new service account
+    1. Type any name as the Service account name
+    1. From the Select a role dropdown, choose BigQuery Admin and click Continue
+    1. Leave the Grant users access to this service account fields blank
+    1. Click Done
+    1. Create a service account key for your new project from the Service accounts page
+    1. When downloading the JSON file, make sure to use a filename you can easily remembe
+1. start the prefect agent in your terminal
+      ```
       prefect agent start default
+      ```
 1. Start prefect server
+    ```
     prefect server start
+    ```
+1. Open the localhost by following the link shown on your terminal from step above
 1. Create GCP credentials block in your prefect UI
     1. Go to blocks
     1. Click the + sign and search for GCP credentials
