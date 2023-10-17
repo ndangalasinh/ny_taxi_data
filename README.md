@@ -10,14 +10,14 @@
 - Google Data Studio
     - A web-based data visualization tool that helps users build customized dashboards and easy-to-understand reports.
 ## Overview
-This is end to end Data Engineering project where data is fetched batch processed and then made readily available for analysis. This data is being fetched from the NYC Taxi & Limousine Commision's website https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page, get processed, and then stored into  Google's fully managed serverless data warehouse. This data is then modelled using DBT to create several tables that then will be used by analysts to create dashboards and analysis.
+This is an end to end Data Engineering project, data is being fetched in batches and processed to be made readily available for analysis and visualization.This project intends to establish a pipeline in which New York taxi data is fetched from the NYC Taxi & Limousine Commision's [website](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page), get processed, and then stored into  Google's fully managed serverless data warehouse. This data is then modelled using DBT to create several tables that then will be used by analysts to create dashboards and analysis.
 
+This project was inspired by the project which was demonstrated in the Data Engineering Zoomcamp run by Data Talks Club(DTC), while this there are significant changes on the implementation majority of ideas were borrowed from DTC. More information about both the boot camp and other DTC programs can be found [here](https://datatalks.club/).
 
-Similar project was demonstrated in the Data Engineering Zoomcamp run by Data Talks Club(DTC), while I have altered some of the implementation I have borrowed most of their ideas. I highly recommend for this boot camp for novice Data Engineers, they can be found here https://datatalks.club/.
 ## Project's main components
-Implementation of this project can be done in three main parts. First Data Aquisation, processing and Storage which covers the whole process of fetching and transforming the fetched data before being stored this whole process is automated by Orchestration and Scheduling tool Prefect. Second stage of this project is modelling the stored data into tables that caters to the needs of the analysts, DBT is the tool we are using in this project for data modelling. The last stage is to create visualization and reporting from the modelled data, here we have used Google's data studio as the reporting tool.
+The implementation of this project will be done in three main parts. First Data Aquisation, processing and Storage which covers the whole process of fetching and transforming the fetched data before being stored. This whole process will be automated by Orchestration and Scheduling tool Prefect. Second stage of this project will be modelling the stored data into tables that caters to the needs of the analysts using DBT. The last stage will be to create visualization and reporting from the modelled data, here we have used Google's data studio as the reporting tool.
 
-### Data Aquisation, Processing, and Storage.(with Orchestration and Scheduling) 
+### 1. Data Aquisation, Processing, and Storage.(with Orchestration and Scheduling) 
 In this part data is downloaded from the source, processed and then stored in a storage, this process is autmoated by using Orchestratation tools.
 There are multiple options of what tools you can use to orchestrate and monitor your scheduled data pipelines, in this case Prefect from https://www.prefect.io/ was used.
 
@@ -25,22 +25,22 @@ After the pipeline was set, a deployment with desired scheduling and monitoring 
 ALTENATIVE XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 CCCCXXXXX
 
-#### Data Aquisation 
+#### 1.1 Data Aquisation 
 As explained above this data is being fetched from the NYC Taxi & Limousine Commission website, since this data is is available as in parquet format then we can directly fetch it into a pandas dataframe. The way data is fetched is different depending if we have the previous data already or not as discussed bellow.
-##### First time (initial) Aquisation
+##### 1.1.1 First time (initial) Aquisation
 In the case that this is the first time we are loading this data then we will have to load all the previous datasets. Care has to be given to attend the fact that you might not want to load all the data set if you do not have enough storage.
-##### Routine Aquisation 
+##### 1.1.2 Routine Aquisation 
 In this case data is loaded on a regular cadance ie once a month so we only load the data that was not loaded last time we loaded data. The simple way to do so is by looking at the current date and then obtain the valu to represent the previous month and use that to select needed data set.
 
-#### Processing
+#### 1.2 Processing
 After datqa aquisation now we can do some processing before we store this data into the Google's Bigquery, it is very important not to do a lot of modification here because we going to store this data in its crude format and downstream will model few tables that we need to keep.
 In this case in particular only few columns were renamed and some rows that could cause issues downstream were removed.
 
-#### Data storage 
+#### 1.3 Data storage 
 The slightly modified data now is ready to be stored in BigQuery, we will store this data into two different tables. Data from the green taxi will be stored in green rides table and that from the yellow taxi will be stored in yellow rides table.
 
  
-### Data Modelling 
+### 2. Data Modelling 
 Now that we have data in our storage we will have to prepare it to be able to be used, in simple case the analysts can easilty access the data from this storage and build dashbord or perfom analysis without a problem. But in cases where there is a lot of data from different sources a warehouse can easily end up being confusing and not having advantages we anticipate a warehouse to have. Hence it is very important to get into a behavior of modelling this data into the easily consumed form ie by combining some tables.
 
 We are using DBT as a tool to model data, DBT is very familiar among data engineers in data modelling.
@@ -83,13 +83,11 @@ We only have few macros that decode some of the basic information which was not 
 - get_triptype_description.sql
 - get_vendorid_description.sql
 
-### Data visualization on Google Data Studio
-I have demonstrated data visualization of this modelled data using Google Data Studio for simplicity, you can acess that visualizaion here https://lookerstudio.google.com/reporting/990a2679-8d75-413b-9ec7-80d3c2595987
-
-Different tools can be used in this case such as PowerBI, Tableau, or Sisense
+### 3. Data visualization on Google Data Studio
+I have demonstrated data visualization of this modelled data using Google Data Studio for simplicity, you can acess that visualizaion here https://lookerstudio.google.com/reporting/990a2679-8d75-413b-9ec7-80d3c2595987.
 
 ## How to implement this project 
-### part 1
+### 1. Setting up Environment and Downloading data into your storage.
 1. Clone the repository 
 ```
 git clone https://github.com/ndangalasinh/ny_taxi_data.git
