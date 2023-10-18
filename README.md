@@ -158,7 +158,7 @@ It is a good practice to create a virtual environment where we will implement th
 ### part 2
 #### Create a repository
 1. Create a personal repository on Github pointing it to your local directory for this projet
-#### Start a project inside DBT
+#### Start a project inside DBT..
 1. create account with DBT cloud
 1. Create a new project in dbt Cloud. From Account settings (using the gear menu in the top right corner), click + New Project.
 1. Enter a project name and click Continue.
