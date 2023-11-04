@@ -87,7 +87,7 @@ We only have few macros that decode some of the basic information which was not 
 I have demonstrated data visualization of this modelled data using Google Data Studio for simplicity, you can acess that visualizaion here https://lookerstudio.google.com/reporting/990a2679-8d75-413b-9ec7-80d3c2595987.
 
 ## How to implement this project 
-### 1. Setting up Environment and Downloading data into your storage.
+### Part 1. Setting up Environment and Downloading data into your storage.
 1. Clone the repository 
 ```
 git clone https://github.com/ndangalasinh/ny_taxi_data.git
@@ -100,7 +100,7 @@ It is a good practice to create a virtual environment where we will implement th
     ```
     pip install conda
     ```
-    - Then you can create you own virtual en
+    - Then you can create you own virtual environment. The code below will create a virtual env with "myenv as the name.
     ```
     conda create --name myenv python=3.9
     ```
@@ -137,8 +137,9 @@ It is a good practice to create a virtual environment where we will implement th
     1. Leave the Grant users access to this service account fields blank
     1. Click Done
     1. Create a service account key for your new project from the Service accounts page
-    1. When downloading the JSON file, make sure to use a filename you can easily remembe
-1. start the prefect agent in your terminal
+    1. When downloading the JSON file, make sure to use a filename you can easily remember
+
+1. start the prefect agent in your terminal. This agent is responsible for processing light weight polling services that will get scheduled works from the work pool and deploy the corresponding flow runs
       ```
       prefect agent start default
       ```
@@ -153,12 +154,13 @@ It is a good practice to create a virtual environment where we will implement th
     1. Click add Block to add this block
     1. Give the block a name (its recommended to use "gcp-credentials" or if you use other name remember to change the same in the etl.py and otherXXXXXXXXX)
 1. Now you can upload data to your storage
-    - For the initial load run etl.py, later we will deploy a job that will be uploading data after everymonth
+    - For the initial load run etl.py, later we will deploy a job that will be uploading data after every month
+1. Automate the process by creating the schedule
 
 ### part 2
 #### Create a repository
 1. Create a personal repository on Github pointing it to your local directory for this projet
-#### Start a project inside DBT..
+#### Start a project inside DBT.
 1. create account with DBT cloud
 1. Create a new project in dbt Cloud. From Account settings (using the gear menu in the top right corner), click + New Project.
 1. Enter a project name and click Continue.
@@ -168,14 +170,14 @@ It is a good practice to create a virtual environment where we will implement th
 1. Click Test Connection. This verifies that dbt Cloud can access your BigQuery account.
 1. Click Next if the test succeeded. If it failed, you might need to go back and regenerate your BigQuery credentials.
 1. Under "Setup a repository", select Managed.
-1. Type a name for your repo such as bbaggins-dbt-quickstart
+1. Type in the name of your repo
 1. Click Create. It will take a few seconds for your repository to be created and imported.
 1. Once you see the "Successfully imported repository," click Continue.
 #TODO Check the behavior when you connect and existing dbt repo
 
 
 ### part 3 
-1. Automate data aquisation
+1. Automate data aquisation #TODO
 1. Automate data modelling
 #### Create a Deployment
 1. In the upper left, select Deploy, then click Environments.
@@ -199,8 +201,26 @@ It is a good practice to create a virtual environment where we will implement th
 
 
 ### part 4
-1. Data visualization
+#### Data visualization
+1. Navigate to the home page of google data studio.
+1. Click the "+ Create" drop down menu
+1. Select "Report" to create a new report
+1. Add data to be used in this report by selecting BigQuery
+1. In BigQuery select the project in which you added data in part 1.
+1. Select appropriate dataset and for the table select the Facts_trips table that was modelled using DBT
+1. Once data has been added to your report you can select from "File" a theme and layout of your choice
+1. You can create a table of "Top Pickup locations" Which uses measures the number of trips for each pick up location
+1. You can also create a table of "Top Dropoff locations" which summarises the number of trips for each drop off location 
+1. You can also have metric for total amount of money spent during the time period
+1. You can also add a metric tracking the total number of trips that was conducted in the particular month
+1. Add a pie chart which will show the payments types that are being used by the riders
+1. Add another pie chart which will show the different type of taxi rides that are being used by the users
+
+### TODO
+1. Transfer infrastructure as code.
+1. Work on the incrimental loading.
 
 
+ 
 
 

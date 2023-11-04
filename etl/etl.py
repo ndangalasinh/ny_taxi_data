@@ -62,7 +62,7 @@ def etl_to_gcs() -> None:
     """
     The main function to extract transform and load data into the datalake
     """
-    years = [2023]  # TODO make sure it is stated in the Readme
+    years = [2023, 2022, 2021, 2020]  # TODO make sure it is stated in the Readme
     tables = ["yellow", "green"]
 
     for table in tables:
