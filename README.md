@@ -44,7 +44,7 @@ The slightly modified data now is ready to be stored in BigQuery, we will store 
 Now that we have data in our storage we will have to prepare it to be able to be used, in simple case the analysts can easilty access the data from this storage and build dashbord or perfom analysis without a problem. But in cases where there is a lot of data from different sources a warehouse can easily end up being confusing and not having advantages we anticipate a warehouse to have. Hence it is very important to get into a behavior of modelling this data into the easily consumed form ie by combining some tables.
 
 We are using DBT as a tool to model data, DBT is very familiar among data engineers in data modelling.
-#### Data will be modelled as follows
+#### 2.1 Data will be modelled as follows
 For context DBT uses the tables that we generated when we stored data in the data warehouse to generate either tables or views which can be used to generate final tables that our analysts will use.
 In this case we have some views that are derived from the tables and then we are using those fews to create tables in Core which are made available to the analysts
 1. Core 
@@ -55,10 +55,10 @@ In this case we have some views that are derived from the tables and then we are
 1. Staging
     - stg_greeen_tripdata View
     - stg_yellow_tripdata View
-#### Seeding(This is used to load files that do not change often)
+#### 2.2 Seeding(This is used to load files that do not change often)
 Seeding is used to upload data into the warehouse, the difference is this is data that might not be changing often so we only do this once.
 - we are only seeding a look up file taxi_zone_lookup.cv for the ny zones
-#### Testing in our models is implemented as follows
+#### 2.3 Testing in our models is implemented as follows
 Only the basic tests have been implemented via schema of the models as follows
 1. stg_green_tripdata 
     - columns to be tested 
@@ -76,7 +76,7 @@ Only the basic tests have been implemented via schema of the models as follows
             - Tests:
                 1. accepted_values warn
 TODO add more testing
-#### Macros
+#### 2.4 Macros
 We only have few macros that decode some of the basic information which was not given directly
 - get_payment_type_description.sql
 - get_ratecode_description.sql
